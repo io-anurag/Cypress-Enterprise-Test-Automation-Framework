@@ -50,16 +50,19 @@ Cypress.Commands.add('loginWithSession', (username?: string, password?: string) 
     [user, pass],
     () => {
       log.step(`Creating new session for: ${user}`);
-      cy.visit('/login');
-      cy.get('#username').type(user, { delay: 0 });
-      cy.get('#password').type(pass, { delay: 0 });
-      cy.get('button[type="submit"]').click();
-      cy.url().should('include', '/secure');
+      cy.request({
+        method: 'POST',
+        url: '/authenticate',
+        form: true,
+        body: { username: user, password: pass },
+        followRedirect: true,
+      });
     },
     {
       validate() {
-        cy.visit('/secure');
-        cy.url().should('include', '/secure');
+        cy.request({ url: '/secure', failOnStatusCode: false })
+          .its('status')
+          .should('eq', 200);
       },
       cacheAcrossSpecs: false,
     },

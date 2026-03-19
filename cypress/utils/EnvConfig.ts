@@ -34,6 +34,9 @@ export function loadEnvConfig(env: string): EnvConfiguration {
   if (process.env['CYPRESS_PASSWORD']) {
     config.credentials.password = process.env['CYPRESS_PASSWORD'];
   }
+  if (process.env['CYPRESS_API_KEY']) {
+    config.apiKey = process.env['CYPRESS_API_KEY'];
+  }
 
   return config;
 }
@@ -66,6 +69,10 @@ export const EnvConfig = {
   isFeatureEnabled(flag: string): boolean {
     const flags = Cypress.env('featureFlags') as Record<string, boolean> | undefined;
     return flags?.[flag] ?? false;
+  },
+
+  getApiKey(): string | undefined {
+    return (Cypress.env('apiKey') as string | undefined) ?? undefined;
   },
 
   get<T>(key: string): T {

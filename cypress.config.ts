@@ -46,6 +46,7 @@ export default defineConfig({
       ENVIRONMENT: env,
       // Expose full API base URL to tests
       API_BASE_URL: envConfig.apiBaseUrl,
+      apiKey: envConfig.apiKey ?? '',
       TAGS: process.env['CYPRESS_TAGS'] ?? '',
     },
 

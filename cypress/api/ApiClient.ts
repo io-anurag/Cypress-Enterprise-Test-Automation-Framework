@@ -2,6 +2,7 @@ import { EnvConfig } from '../utils/EnvConfig';
 import { Logger } from '../utils/Logger';
 import type { ApiRequestOptions } from '../types';
 
+
 /**
  * ApiClient — Base class for all API clients in the framework.
  * Wraps cy.request with a consistent interface: auth injection,
@@ -140,6 +141,11 @@ export abstract class ApiClient {
       Accept: 'application/json',
       ...extraHeaders,
     };
+
+    const apiKey = EnvConfig.getApiKey();
+    if (apiKey) {
+      headers['x-api-key'] = apiKey;
+    }
 
     if (this.authToken) {
       headers['Authorization'] = `Bearer ${this.authToken}`;

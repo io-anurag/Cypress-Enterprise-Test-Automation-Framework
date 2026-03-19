@@ -6,6 +6,7 @@
 export interface EnvConfiguration {
   baseUrl: string;
   apiBaseUrl: string;
+  apiKey?: string;
   credentials: {
     username: string;
     password: string;

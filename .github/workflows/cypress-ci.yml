@@ -106,6 +106,7 @@ jobs:
             --spec "${{ steps.specs.outputs.specs }}"
         env:
           CYPRESS_ENV: ${{ env.CYPRESS_ENV }}
+          CYPRESS_API_KEY: ${{ secrets.CYPRESS_API_KEY }}
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
           CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
 

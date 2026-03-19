@@ -2,7 +2,6 @@ import { EnvConfig } from '../utils/EnvConfig';
 import { Logger } from '../utils/Logger';
 import type { ApiRequestOptions } from '../types';
 
-
 /**
  * ApiClient — Base class for all API clients in the framework.
  * Wraps cy.request with a consistent interface: auth injection,

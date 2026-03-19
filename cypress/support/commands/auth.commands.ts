@@ -60,9 +60,7 @@ Cypress.Commands.add('loginWithSession', (username?: string, password?: string) 
     },
     {
       validate() {
-        cy.request({ url: '/secure', failOnStatusCode: false })
-          .its('status')
-          .should('eq', 200);
+        cy.request({ url: '/secure', failOnStatusCode: false }).its('status').should('eq', 200);
       },
       cacheAcrossSpecs: false,
     },

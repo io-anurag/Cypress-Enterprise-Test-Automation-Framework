@@ -4,6 +4,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://typescriptlang.org)
 [![ESLint](https://img.shields.io/badge/ESLint-Configured-4B32C3?logo=eslint)](https://eslint.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Cypress Enterprise Framework — CI](https://github.com/io-anurag/Cypress-Enterprise-Test-Automation-Framework/actions/workflows/cypress-ci.yml/badge.svg)](https://github.com/io-anurag/Cypress-Enterprise-Test-Automation-Framework/actions/workflows/cypress-ci.yml)
 
 A **production-ready, enterprise-grade** end-to-end test automation framework built with Cypress 15 and TypeScript. Supports UI tests, API tests, multi-environment execution, dual reporting, and CI/CD pipeline integration.
 

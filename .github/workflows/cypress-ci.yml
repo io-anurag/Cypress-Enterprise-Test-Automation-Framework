@@ -116,6 +116,7 @@ jobs:
         with:
           name: mochawesome-shard-${{ matrix.shard }}
           path: cypress/reports/mochawesome/jsons/*.json
+          if-no-files-found: warn
           retention-days: 14
 
       - name: Upload screenshots (on failure)
@@ -155,16 +156,30 @@ jobs:
         run: npm ci
 
       - name: Download all Mochawesome JSON shards
+        id: download
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           pattern: mochawesome-shard-*
           path: cypress/reports/mochawesome/jsons
           merge-multiple: true
 
+      - name: Check for report files
+        id: check-reports
+        run: |
+          if ls cypress/reports/mochawesome/jsons/*.json 1>/dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::No mochawesome JSON files found — skipping report merge."
+          fi
+
       - name: Merge reports and generate HTML
+        if: steps.check-reports.outputs.found == 'true'
         run: npm run report:merge
 
       - name: Upload merged HTML report
+        if: steps.check-reports.outputs.found == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: cypress-html-report

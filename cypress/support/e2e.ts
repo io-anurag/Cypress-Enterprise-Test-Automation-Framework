@@ -2,7 +2,6 @@ import './commands/auth.commands';
 import './commands/ui.commands';
 import './commands/api.commands';
 import '@shelex/cypress-allure-plugin';
-import 'cypress-mochawesome-reporter/register';
 
 beforeEach(() => {
   const testTitle = Cypress.currentTest.titlePath.join(' > ');

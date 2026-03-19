@@ -52,10 +52,6 @@ export default defineConfig({
 
     // ─── Plugin Setup ─────────────────────────────────────────────────────────
     setupNodeEvents(on, config) {
-      // Mochawesome reporter
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      require('cypress-mochawesome-reporter/plugin')(on);
-
       // Allure reporter
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       require('@shelex/cypress-allure-plugin/writer')(on, config);
@@ -84,13 +80,8 @@ export default defineConfig({
   },
 
   // ─── Reporter Configuration ───────────────────────────────────────────────
-  reporter: 'cypress-mochawesome-reporter',
+  reporter: 'mochawesome',
   reporterOptions: {
-    charts: true,
-    reportPageTitle: 'Cypress Enterprise Framework – Test Report',
-    embeddedScreenshots: true,
-    inlineAssets: true,
-    saveAllAttempts: false,
     reportDir: 'cypress/reports/mochawesome/jsons',
     overwrite: false,
     html: false,

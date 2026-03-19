@@ -15,7 +15,7 @@
     "cy:run:qa": "CYPRESS_ENV=qa cypress run --headless",
     "cy:run:staging": "CYPRESS_ENV=staging cypress run --headless",
     "cy:run:prod": "CYPRESS_ENV=prod cypress run --headless",
-    "report:merge": "mkdir -p cypress/reports/mochawesome/html && mochawesome-merge 'cypress/reports/mochawesome/.jsons/*.json' -o cypress/reports/mochawesome/merged.json && marge cypress/reports/mochawesome/merged.json --reportDir cypress/reports/mochawesome/html --inline",
+    "report:merge": "mkdir -p cypress/reports/mochawesome/html && mochawesome-merge 'cypress/reports/mochawesome/jsons/*.json' -o cypress/reports/mochawesome/merged.json && marge cypress/reports/mochawesome/merged.json --reportDir cypress/reports/mochawesome/html --inline",
     "report:allure": "allure serve allure-results",
     "report:allure:generate": "allure generate allure-results --clean -o allure-report",
     "lint": "eslint cypress --ext .ts --max-warnings 0",

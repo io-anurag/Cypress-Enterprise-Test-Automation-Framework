@@ -92,6 +92,7 @@ export default defineConfig({
     inlineAssets: true,
     saveAllAttempts: false,
     reportDir: 'cypress/reports/mochawesome',
+    jsonDir: 'cypress/reports/mochawesome/jsons',
     overwrite: false,
     html: true,
     json: true,

@@ -115,7 +115,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mochawesome-shard-${{ matrix.shard }}
-          path: cypress/reports/mochawesome/.jsons/*.json
+          path: cypress/reports/mochawesome/jsons/*.json
           retention-days: 14
 
       - name: Upload screenshots (on failure)
@@ -158,7 +158,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: mochawesome-shard-*
-          path: cypress/reports/mochawesome/.jsons
+          path: cypress/reports/mochawesome/jsons
           merge-multiple: true
 
       - name: Merge reports and generate HTML

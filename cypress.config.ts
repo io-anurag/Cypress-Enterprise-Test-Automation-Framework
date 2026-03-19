@@ -91,12 +91,10 @@ export default defineConfig({
     embeddedScreenshots: true,
     inlineAssets: true,
     saveAllAttempts: false,
-    reportDir: 'cypress/reports/mochawesome',
-    jsonDir: 'cypress/reports/mochawesome/jsons',
+    reportDir: 'cypress/reports/mochawesome/jsons',
     overwrite: false,
-    html: true,
+    html: false,
     json: true,
-    timestamp: 'mmddyyyy_HHMMss',
   },
 
   // ─── Resolved Path Config ────────────────────────────────────────────────

@@ -1,0 +1,32 @@
+{
+  "featuredProduct": {
+    "id": "PROD-001",
+    "name": "Enterprise Laptop Pro",
+    "category": "Electronics",
+    "price": 1299.99,
+    "currency": "USD",
+    "sku": "ELP-001-BLK",
+    "inStock": true,
+    "tags": ["electronics", "laptop", "enterprise"]
+  },
+  "budgetProduct": {
+    "id": "PROD-002",
+    "name": "Wireless Mouse",
+    "category": "Peripherals",
+    "price": 29.99,
+    "currency": "USD",
+    "sku": "WM-002-WHT",
+    "inStock": true,
+    "tags": ["peripherals", "mouse", "wireless"]
+  },
+  "outOfStockProduct": {
+    "id": "PROD-003",
+    "name": "Standing Desk",
+    "category": "Furniture",
+    "price": 499.00,
+    "currency": "USD",
+    "sku": "SD-003-BRN",
+    "inStock": false,
+    "tags": ["furniture", "desk", "ergonomic"]
+  }
+}

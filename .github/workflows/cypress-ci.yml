@@ -1,0 +1,172 @@
+name: Cypress Enterprise Framework — CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'qa'
+        type: choice
+        options: [dev, qa, staging, prod]
+      tags:
+        description: 'Test tags filter (smoke | regression | api | ui)'
+        required: false
+        default: ''
+
+# Cancel in-progress runs on the same branch
+concurrency:
+  group: cypress-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  CYPRESS_ENV: ${{ github.event.inputs.environment || 'qa' }}
+  CYPRESS_TAGS: ${{ github.event.inputs.tags || '' }}
+
+jobs:
+  # ─── Stage 1: Code Quality Gate ─────────────────────────────────────────────
+  quality:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript type check
+        run: npm run type-check
+
+  # ─── Stage 2: Cypress Tests (Parallel via Matrix) ───────────────────────────
+  cypress-tests:
+    name: Cypress — Shard ${{ matrix.shard }} / ${{ matrix.total }}
+    runs-on: ubuntu-latest
+    needs: quality
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+        total: [2]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Cypress binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: cypress-${{ runner.os }}-
+
+      - name: Verify Cypress installation
+        run: npx cypress verify
+
+      - name: Run Cypress tests (shard ${{ matrix.shard }}/${{ matrix.total }})
+        run: |
+          npx cypress run \
+            --headless \
+            --browser chrome \
+            --env tags="${{ env.CYPRESS_TAGS }}",ENVIRONMENT="${{ env.CYPRESS_ENV }}" \
+            --shard "${{ matrix.shard }}/${{ matrix.total }}"
+        env:
+          CYPRESS_ENV: ${{ env.CYPRESS_ENV }}
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+
+      - name: Upload test results (JSON)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mochawesome-shard-${{ matrix.shard }}
+          path: cypress/reports/mochawesome/*.json
+          retention-days: 14
+
+      - name: Upload screenshots (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-shard-${{ matrix.shard }}
+          path: cypress/reports/screenshots/
+          retention-days: 7
+
+      - name: Upload videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: videos-shard-${{ matrix.shard }}
+          path: cypress/reports/videos/
+          retention-days: 7
+
+  # ─── Stage 3: Merge & Publish Reports ───────────────────────────────────────
+  report:
+    name: Merge & Publish Reports
+    runs-on: ubuntu-latest
+    needs: cypress-tests
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download all Mochawesome JSON shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: mochawesome-shard-*
+          path: cypress/reports/mochawesome
+          merge-multiple: true
+
+      - name: Merge reports and generate HTML
+        run: npm run report:merge
+
+      - name: Upload merged HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-html-report
+          path: cypress/reports/mochawesome/html/
+          retention-days: 30
+
+      - name: Publish report summary to PR comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **Cypress Test Report** generated! Download the `cypress-html-report` artifact from the Actions run.'
+            })

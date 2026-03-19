@@ -1,0 +1,24 @@
+{
+  "validUser": {
+    "username": "tomsmith",
+    "password": "SuperSecretPassword!",
+    "role": "admin",
+    "displayName": "Tom Smith"
+  },
+  "invalidUser": {
+    "username": "wronguser",
+    "password": "wrongpassword",
+    "displayName": "Invalid User"
+  },
+  "lockedUser": {
+    "username": "lockedaccount",
+    "password": "AnyPassword!",
+    "displayName": "Locked Account"
+  },
+  "readOnlyUser": {
+    "username": "readonly.user@example.com",
+    "password": "ReadOnly@123",
+    "role": "viewer",
+    "displayName": "Read-Only User"
+  }
+}

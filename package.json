@@ -1,0 +1,67 @@
+{
+  "name": "cypress-ts-enterprise-framework",
+  "version": "1.0.0",
+  "description": "Enterprise-grade Cypress TypeScript E2E test automation framework",
+  "license": "MIT",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:headless": "cypress run --headless --browser chrome",
+    "cy:run:smoke": "cypress run --headless --env tags=smoke",
+    "cy:run:regression": "cypress run --headless --env tags=regression",
+    "cy:run:api": "cypress run --headless --spec 'cypress/e2e/api/**/*.cy.ts'",
+    "cy:run:ui": "cypress run --headless --spec 'cypress/e2e/ui/**/*.cy.ts'",
+    "cy:run:dev": "CYPRESS_ENV=dev cypress run --headless",
+    "cy:run:qa": "CYPRESS_ENV=qa cypress run --headless",
+    "cy:run:staging": "CYPRESS_ENV=staging cypress run --headless",
+    "cy:run:prod": "CYPRESS_ENV=prod cypress run --headless",
+    "report:merge": "mochawesome-merge cypress/reports/mochawesome/*.json > cypress/reports/mochawesome/merged.json && marge cypress/reports/mochawesome/merged.json --reportDir cypress/reports/mochawesome/html --inline",
+    "report:allure": "allure serve allure-results",
+    "report:allure:generate": "allure generate allure-results --clean -o allure-report",
+    "lint": "eslint cypress --ext .ts --max-warnings 0",
+    "lint:fix": "eslint cypress --ext .ts --fix",
+    "format": "prettier --write 'cypress/**/*.ts' '*.ts' '*.json'",
+    "format:check": "prettier --check 'cypress/**/*.ts' '*.ts' '*.json'",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky install",
+    "precommit": "lint-staged"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.40.1",
+    "@types/node": "^20.11.30",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "allure-commandline": "^2.27.0",
+    "cypress": "^15.12.0",
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "cypress-xpath": "^2.0.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-cypress": "^3.3.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  },
+  "lint-staged": {
+    "cypress/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

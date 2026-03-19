@@ -1,0 +1,110 @@
+stages:
+  - install
+  - quality
+  - test
+  - report
+
+variables:
+  CYPRESS_ENV: ${CI_ENVIRONMENT_NAME:-qa}
+  NODE_VERSION: "20"
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/.cache/Cypress"
+
+# ─── Cache Strategy ──────────────────────────────────────────────────────────
+.cache_config: &cache_config
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+      - .cache/Cypress/
+      - node_modules/
+
+# ─── Stage: install ──────────────────────────────────────────────────────────
+install:
+  stage: install
+  image: node:20-alpine
+  <<: *cache_config
+  script:
+    - npm ci --prefer-offline
+    - npx cypress verify
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+
+# ─── Stage: quality ──────────────────────────────────────────────────────────
+lint:
+  stage: quality
+  image: node:20-alpine
+  needs: [install]
+  <<: *cache_config
+  script:
+    - npm run lint
+    - npm run type-check
+    - npm run format:check
+
+# ─── Stage: test (parallel) ──────────────────────────────────────────────────
+.cypress_template: &cypress_template
+  stage: test
+  image: cypress/browsers:node-20.13.1-chrome-124.0.6367.207-1-ff-125.0.3-edge-124.0.2478.80-1
+  needs: [lint]
+  <<: *cache_config
+  before_script:
+    - npm ci --prefer-offline
+  artifacts:
+    when: always
+    paths:
+      - cypress/reports/
+    expire_in: 7 days
+    reports:
+      junit: cypress/reports/mochawesome/*.xml
+
+cypress:smoke:
+  <<: *cypress_template
+  script:
+    - |
+      npx cypress run \
+        --headless \
+        --browser chrome \
+        --env tags=smoke,ENVIRONMENT=$CYPRESS_ENV
+  variables:
+    CYPRESS_USERNAME: $CYPRESS_USERNAME
+    CYPRESS_PASSWORD: $CYPRESS_PASSWORD
+  environment:
+    name: $CYPRESS_ENV
+
+cypress:regression:
+  <<: *cypress_template
+  script:
+    - |
+      npx cypress run \
+        --headless \
+        --browser chrome \
+        --env tags=regression,ENVIRONMENT=$CYPRESS_ENV
+  variables:
+    CYPRESS_USERNAME: $CYPRESS_USERNAME
+    CYPRESS_PASSWORD: $CYPRESS_PASSWORD
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+
+# ─── Stage: report ───────────────────────────────────────────────────────────
+merge_reports:
+  stage: report
+  image: node:20-alpine
+  needs:
+    - job: cypress:smoke
+      artifacts: true
+    - job: cypress:regression
+      artifacts: true
+      optional: true
+  when: always
+  script:
+    - npm ci --prefer-offline
+    - npm run report:merge
+  artifacts:
+    paths:
+      - cypress/reports/mochawesome/html/
+    expire_in: 30 days

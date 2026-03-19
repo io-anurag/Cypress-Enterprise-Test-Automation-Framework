@@ -86,13 +86,24 @@ jobs:
       - name: Verify Cypress installation
         run: npx cypress verify
 
+      - name: Resolve specs for shard ${{ matrix.shard }}/${{ matrix.total }}
+        id: specs
+        run: |
+          ALL_SPECS=$(find cypress/e2e -name '*.cy.ts' | sort)
+          TOTAL=${{ matrix.total }}
+          INDEX=$(( ${{ matrix.shard }} - 1 ))
+          SHARD_SPECS=$(echo "$ALL_SPECS" | awk "NR % $TOTAL == $INDEX")
+          JOINED=$(echo "$SHARD_SPECS" | paste -sd ',')
+          echo "specs=$JOINED" >> "$GITHUB_OUTPUT"
+
       - name: Run Cypress tests (shard ${{ matrix.shard }}/${{ matrix.total }})
+        if: steps.specs.outputs.specs != ''
         run: |
           npx cypress run \
             --headless \
             --browser chrome \
             --env tags="${{ env.CYPRESS_TAGS }}",ENVIRONMENT="${{ env.CYPRESS_ENV }}" \
-            --shard "${{ matrix.shard }}/${{ matrix.total }}"
+            --spec "${{ steps.specs.outputs.specs }}"
         env:
           CYPRESS_ENV: ${{ env.CYPRESS_ENV }}
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}

@@ -1,4 +1,5 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
+import type { Interception } from 'cypress/types/net-stubbing';
 import { Logger } from '../utils/Logger';
 
 /**
@@ -48,12 +49,18 @@ export abstract class BasePage {
     return cy.get(selector).scrollIntoView().trigger('mouseover');
   }
 
-  protected waitForVisible(selector: string, timeout = 10_000): Cypress.Chainable<JQuery<HTMLElement>> {
+  protected waitForVisible(
+    selector: string,
+    timeout = 10_000,
+  ): Cypress.Chainable<JQuery<HTMLElement>> {
     this.log.debug(`Waiting for visible: ${selector}`);
     return cy.get(selector, { timeout }).should('be.visible');
   }
 
-  protected waitForHidden(selector: string, timeout = 10_000): Cypress.Chainable<JQuery<HTMLElement>> {
+  protected waitForHidden(
+    selector: string,
+    timeout = 10_000,
+  ): Cypress.Chainable<JQuery<HTMLElement>> {
     this.log.debug(`Waiting for hidden: ${selector}`);
     return cy.get(selector, { timeout }).should('not.be.visible');
   }
@@ -61,7 +68,9 @@ export abstract class BasePage {
   /**
    * Wait for a spinner/loading element to disappear.
    */
-  protected waitForLoadingToFinish(spinnerSelector = '[data-testid="loading-spinner"]'): Cypress.Chainable<void> {
+  protected waitForLoadingToFinish(
+    spinnerSelector = '[data-testid="loading-spinner"]',
+  ): Cypress.Chainable<void> {
     return cy.get('body').then(($body) => {
       if ($body.find(spinnerSelector).length > 0) {
         this.waitForHidden(spinnerSelector, 30_000);
@@ -74,7 +83,7 @@ export abstract class BasePage {
    * Wait for a named network request alias.
    * Usage: cy.intercept(...).as('alias') then page.waitForRequest('alias')
    */
-  protected waitForRequest(alias: string, timeout = 15_000): Cypress.Chainable<any> {
+  protected waitForRequest(alias: string, timeout = 15_000): Cypress.Chainable<Interception> {
     this.log.debug(`Waiting for request: @${alias}`);
     return cy.wait(`@${alias}`, { timeout });
   }
@@ -83,7 +92,11 @@ export abstract class BasePage {
     return cy.get(selector).should('contain.text', text);
   }
 
-  protected assertAttribute(selector: string, attr: string, value: string): Cypress.Chainable<JQuery<HTMLElement>> {
+  protected assertAttribute(
+    selector: string,
+    attr: string,
+    value: string,
+  ): Cypress.Chainable<JQuery<HTMLElement>> {
     return cy.get(selector).should('have.attr', attr, value);
   }
 
@@ -97,6 +110,7 @@ export abstract class BasePage {
   }
 
   protected takeScreenshot(name: string): void {
+    cy.document().should('exist');
     cy.screenshot(`${this.pageName}/${name}`, { overwrite: true });
   }
 

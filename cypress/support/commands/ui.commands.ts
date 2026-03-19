@@ -10,20 +10,12 @@ const log = new Logger('UICommands');
 
 Cypress.Commands.add('smartClick', (selector: string) => {
   log.debug(`smartClick: ${selector}`);
-  cy.get(selector)
-    .scrollIntoView()
-    .should('be.visible')
-    .and('not.be.disabled')
-    .click();
+  cy.get(selector).scrollIntoView().should('be.visible').and('not.be.disabled').click();
 });
 
 Cypress.Commands.add('smartType', (selector: string, text: string) => {
   log.debug(`smartType: ${selector} → "${text}"`);
-  cy.get(selector)
-    .scrollIntoView()
-    .should('be.visible')
-    .clear()
-    .type(text, { delay: 0 });
+  cy.get(selector).scrollIntoView().should('be.visible').clear().type(text, { delay: 0 });
 });
 
 Cypress.Commands.add('waitForElement', (selector: string, timeout = 10_000) => {
@@ -59,10 +51,7 @@ Cypress.Commands.add('clearState', () => {
   log.debug('Cleared all browser state');
 });
 
-Cypress.Commands.add(
-  'interceptAndAlias',
-  (method: string, urlPattern: string, alias: string) => {
-    log.debug(`Intercepting ${method} ${urlPattern} as @${alias}`);
-    cy.intercept(method, urlPattern).as(alias);
-  },
-);
+Cypress.Commands.add('interceptAndAlias', (method: string, urlPattern: string, alias: string) => {
+  log.debug(`Intercepting ${method} ${urlPattern} as @${alias}`);
+  cy.intercept(method, urlPattern).as(alias);
+});

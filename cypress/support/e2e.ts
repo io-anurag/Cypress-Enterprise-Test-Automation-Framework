@@ -4,7 +4,6 @@ import './commands/api.commands';
 import '@shelex/cypress-allure-plugin';
 import 'cypress-mochawesome-reporter/register';
 
-
 beforeEach(() => {
   const testTitle = Cypress.currentTest.titlePath.join(' > ');
   cy.log(`▶ Starting: ${testTitle}`);
@@ -19,10 +18,10 @@ afterEach(function () {
       .join('_')
       .split('/')
       .join('-');
+    cy.document().should('exist');
     cy.screenshot(`FAILED__${screenshotName}`, { capture: 'fullPage' });
   }
 });
-
 
 Cypress.on('uncaught:exception', (err) => {
   if (err.message.includes('ResizeObserver loop limit exceeded')) {

@@ -87,10 +87,14 @@ export class Logger {
 
   private getConsoleFn(level: LogLevel): (...args: unknown[]) => void {
     switch (level) {
-      case 'DEBUG': return console.info;
-      case 'INFO': return console.info;
-      case 'WARN': return console.warn;
-      case 'ERROR': return console.error;
+      case 'DEBUG':
+        return console.info;
+      case 'INFO':
+        return console.info;
+      case 'WARN':
+        return console.warn;
+      case 'ERROR':
+        return console.error;
     }
   }
 

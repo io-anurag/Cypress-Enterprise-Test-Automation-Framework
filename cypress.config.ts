@@ -16,8 +16,8 @@ export default defineConfig({
 
     // ─── Retries ─────────────────────────────────────────────────────────────
     retries: {
-      runMode: 2,   // Retry twice in CI
-      openMode: 0,  // No retries when developing locally
+      runMode: 2, // Retry twice in CI
+      openMode: 0, // No retries when developing locally
     },
 
     // ─── Timeouts ────────────────────────────────────────────────────────────

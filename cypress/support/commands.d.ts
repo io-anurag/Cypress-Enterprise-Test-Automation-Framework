@@ -7,7 +7,6 @@
  */
 declare namespace Cypress {
   interface Chainable {
-
     /**
      * Full UI login — fills form + submits, waits for /secure URL.
      * @example cy.login('tomsmith', 'SuperSecretPassword!')
@@ -33,7 +32,6 @@ declare namespace Cypress {
      * Click the logout link and verify redirect to /login.
      */
     logout(): Chainable<void>;
-
 
     /**
      * Scroll-into-view + wait for visible + wait for enabled + click.
@@ -107,17 +105,29 @@ declare namespace Cypress {
      * Typed POST request with auto-injected base URL and auth token.
      * @example cy.apiPost<CreateUserResponse>('/users', { name: 'Test', job: 'QA' })
      */
-    apiPost<T = unknown>(path: string, body: unknown, options?: Partial<RequestOptions>): Chainable<Response<T>>;
+    apiPost<T = unknown>(
+      path: string,
+      body: unknown,
+      options?: Partial<RequestOptions>,
+    ): Chainable<Response<T>>;
 
     /**
      * Typed PUT request with auto-injected base URL and auth token.
      */
-    apiPut<T = unknown>(path: string, body: unknown, options?: Partial<RequestOptions>): Chainable<Response<T>>;
+    apiPut<T = unknown>(
+      path: string,
+      body: unknown,
+      options?: Partial<RequestOptions>,
+    ): Chainable<Response<T>>;
 
     /**
      * Typed PATCH request with auto-injected base URL and auth token.
      */
-    apiPatch<T = unknown>(path: string, body: unknown, options?: Partial<RequestOptions>): Chainable<Response<T>>;
+    apiPatch<T = unknown>(
+      path: string,
+      body: unknown,
+      options?: Partial<RequestOptions>,
+    ): Chainable<Response<T>>;
 
     /**
      * Typed DELETE request with auto-injected base URL and auth token.

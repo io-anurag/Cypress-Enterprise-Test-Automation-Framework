@@ -50,6 +50,7 @@ describe('Login | UI Tests', () => {
     dashboardPage.assertOnDashboard();
     dashboardPage.assertWelcomeHeaderVisible();
     dashboardPage.assertLoginSuccessFlash();
+    cy.url().should('include', '/secure');
     cy.screenshot('TC-001_successful_login');
   });
 

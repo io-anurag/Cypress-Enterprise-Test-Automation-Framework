@@ -30,7 +30,10 @@ export class UsersApiClient extends ApiClient {
   /**
    * GET /users?page={page} — Paginated list of users
    */
-  getUsers(page = 1, options?: ApiRequestOptions): Cypress.Chainable<Cypress.Response<PaginatedResponse<ApiUser>>> {
+  getUsers(
+    page = 1,
+    options?: ApiRequestOptions,
+  ): Cypress.Chainable<Cypress.Response<PaginatedResponse<ApiUser>>> {
     this.log.step(`Fetching users — page ${page}`);
     return this.get<PaginatedResponse<ApiUser>>(`${this.endpoint}?page=${page}`, options);
   }
@@ -38,7 +41,10 @@ export class UsersApiClient extends ApiClient {
   /**
    * GET /users/{id} — Single user by ID
    */
-  getUserById(id: number, options?: ApiRequestOptions): Cypress.Chainable<Cypress.Response<SingleResponse<ApiUser>>> {
+  getUserById(
+    id: number,
+    options?: ApiRequestOptions,
+  ): Cypress.Chainable<Cypress.Response<SingleResponse<ApiUser>>> {
     this.log.step(`Fetching user by ID: ${id}`);
     return this.get<SingleResponse<ApiUser>>(`${this.endpoint}/${id}`, options);
   }
@@ -48,7 +54,10 @@ export class UsersApiClient extends ApiClient {
   /**
    * POST /users — Create a new user
    */
-  createUser(payload: CreateUserPayload, options?: ApiRequestOptions): Cypress.Chainable<Cypress.Response<CreateUserResponse>> {
+  createUser(
+    payload: CreateUserPayload,
+    options?: ApiRequestOptions,
+  ): Cypress.Chainable<Cypress.Response<CreateUserResponse>> {
     this.log.step(`Creating user: ${payload.name}`);
     return this.post<CreateUserResponse>(this.endpoint, payload, options);
   }
@@ -58,7 +67,11 @@ export class UsersApiClient extends ApiClient {
   /**
    * PUT /users/{id} — Full update of a user
    */
-  updateUser(id: number, payload: UpdateUserPayload, options?: ApiRequestOptions): Cypress.Chainable<Cypress.Response<UpdateUserResponse>> {
+  updateUser(
+    id: number,
+    payload: UpdateUserPayload,
+    options?: ApiRequestOptions,
+  ): Cypress.Chainable<Cypress.Response<UpdateUserResponse>> {
     this.log.step(`Updating user ID ${id} (PUT)`);
     return this.put<UpdateUserResponse>(`${this.endpoint}/${id}`, payload, options);
   }
@@ -66,7 +79,11 @@ export class UsersApiClient extends ApiClient {
   /**
    * PATCH /users/{id} — Partial update of a user
    */
-  patchUser(id: number, payload: Partial<UpdateUserPayload>, options?: ApiRequestOptions): Cypress.Chainable<Cypress.Response<UpdateUserResponse>> {
+  patchUser(
+    id: number,
+    payload: Partial<UpdateUserPayload>,
+    options?: ApiRequestOptions,
+  ): Cypress.Chainable<Cypress.Response<UpdateUserResponse>> {
     this.log.step(`Patching user ID ${id} (PATCH)`);
     return this.patch<UpdateUserResponse>(`${this.endpoint}/${id}`, payload, options);
   }

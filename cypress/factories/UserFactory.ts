@@ -58,9 +58,7 @@ export class UserFactory {
    * @param role  - Optional role override for all users.
    */
   static buildMany(count: number, role?: UserRole): User[] {
-    return Array.from({ length: count }, () =>
-      UserFactory.build(role ? { role } : {}),
-    );
+    return Array.from({ length: count }, () => UserFactory.build(role ? { role } : {}));
   }
 
   /**

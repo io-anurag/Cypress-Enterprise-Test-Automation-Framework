@@ -71,12 +71,10 @@ describe('Users API | CRUD Tests', () => {
     it('[regression] should return 404 for a non-existent user ID', () => {
       log.step('TC-API-004: GET /users/9999 → 404');
 
-      usersApi
-        .getUserById(9999, { failOnStatusCode: false })
-        .then((response) => {
-          expect(response.status).to.equal(404);
-          expect(response.body).to.deep.equal({});
-        });
+      usersApi.getUserById(9999, { failOnStatusCode: false }).then((response) => {
+        expect(response.status).to.equal(404);
+        expect(response.body).to.deep.equal({});
+      });
     });
   });
 

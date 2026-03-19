@@ -24,7 +24,9 @@ export class DataSeeder {
   /**
    * Creates a user via the API and tracks it for cleanup.
    */
-  createUser(payload: CreateUserPayload): Cypress.Chainable<{ id: string; name: string; job: string }> {
+  createUser(
+    payload: CreateUserPayload,
+  ): Cypress.Chainable<{ id: string; name: string; job: string }> {
     log.info(`Seeding user: ${payload.name}`);
 
     return cy

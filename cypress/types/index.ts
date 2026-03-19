@@ -84,12 +84,10 @@ export interface ApiError {
 
 export type TestTag = 'smoke' | 'regression' | 'api' | 'ui' | 'e2e' | 'critical' | 'flaky';
 
-
 export interface Credentials {
   username: string;
   password: string;
 }
-
 
 export interface ApiRequestOptions {
   headers?: Record<string, string>;
@@ -97,7 +95,6 @@ export interface ApiRequestOptions {
   failOnStatusCode?: boolean;
   retries?: number;
 }
-
 
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
 
@@ -108,7 +105,6 @@ export interface LogEntry {
   timestamp: string;
   data?: unknown;
 }
-
 
 export interface SeedOptions {
   userCount?: number;

@@ -17,6 +17,7 @@
     "skipLibCheck": true,
     "types": ["cypress", "node", "@shelex/cypress-allure-plugin"],
     "baseUrl": ".",
+    "outDir": "dist/",
     "paths": {
       "@pages/*": ["cypress/pages/*"],
       "@api/*": ["cypress/api/*"],
